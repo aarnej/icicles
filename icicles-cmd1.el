@@ -447,7 +447,7 @@
 ;;  `icicles-doc2.el'.
 ;;
 ;;  For descriptions of changes to this file, see `icicles-chg.el'.
- 
+
 ;;(@> "Index")
 ;;
 ;;  If you have library `linkd.el' and Emacs 22 or later, load
@@ -460,7 +460,7 @@
 ;;  (@> "Internal Variables (alphabetical)")
 ;;  (@> "Macros")
 ;;  (@> "Icicles Top-Level Commands, Part 1")
- 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; This program is free software; you can redistribute it and/or
@@ -509,8 +509,6 @@
   ;; find-tag-marker-ring, find-tag-other-window, goto-tag-location-function, snarf-tag-function,
   ;; tag-find-file-of-tag-noselect, tags-case-fold-search,
   ;; tags-lazy-completion-table, tags-table-files, visit-tags-table-buffer
-(eval-when-compile (require 'yow nil t)) ;; (no error if not found):
-  ;; apropos-zippy, yow-after-load-message, yow-file, yow-load-message
 
 ;; Commented out because `synonyms.el' soft-requires Icicles.
 ;; (eval-when-compile (require 'synonyms nil t)) ;; (no error if not found):
@@ -660,12 +658,9 @@
 (defvar snarf-tag-function)             ; In `etags.el'
 (defvar translation-table-for-input)    ; Built-in, Emacs 21+
 (defvar w3m-current-title)              ; In `w3m.el'
-(defvar yow-after-load-message)
-(defvar yow-file)
-(defvar yow-load-message)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- 
+
 ;;(@* "Internal Variables (alphabetical)")
 
 ;;; Internal variables (alphabetical) --------------------------------
@@ -691,7 +686,7 @@ Non-nil means `icicle-locate-file*' uses external command `locate'.")
 
 (defvar icicle-new-bufs-to-kill ()
   "List of temporary buffers for content-searching commands.")
- 
+
 ;;(@* "Macros")
 
 ;;; Macros -----------------------------------------------------------
@@ -805,7 +800,7 @@ Non-nil READ-ONLY-P means visit file in read-only mode."
                              (get-buffer (file-name-nondirectory fil))
                            (get-file-buffer fil)))
           (push fil icicle-new-bufs-to-keep))))))
- 
+
 ;;(@* "Icicles Top-Level Commands, Part 1")
 
 ;;; Icicles Top-Level Commands, Part 1 -------------------------------
@@ -3082,28 +3077,6 @@ See also:
   "Action function for `icicle-apropos-options-of-type'."
   (let ((icicle-list-use-nth-parts  '(1)))
     (apropos-option (icicle-transform-multi-completion opt+type))))
-
-(defun icicle-apropos-zippy (regexp)
-  "Show all Zippy quotes matching the regular-expression REGEXP.
-Return the list of matches."
-  (interactive (progn (unless (boundp 'yow-file)
-                        (unless (require 'yow nil t) (error "Library `yow' not found")))
-                      (cookie yow-file yow-load-message yow-after-load-message)
-                      (let* ((case-fold-search     t)
-                             (cookie-table-symbol  (intern yow-file cookie-cache))
-                             (string-table         (symbol-value cookie-table-symbol))
-                             (table                (nreverse (mapcar #'list string-table))))
-                        (list (completing-read "Apropos Zippy (regexp): " table
-                                               nil nil nil 'regexp-history)))))
-  (let ((matches  (apropos-zippy icicle-current-input)))
-    (when (interactive-p)
-      (icicle-with-help-window "*Zippy Apropos*"
-        (while matches
-          (princ (car matches))
-          (setq matches  (cdr matches))
-          (and matches  (princ "\n\n")))))
-    matches))                           ; Return matching Zippyisms.
-
 
 (put 'icicle-apropos-value 'icicle-turn-off-icomplete-mode t)
 (put 'icicle-apropos-value 'icicle-turn-off-incremental-completion t)
@@ -6649,10 +6622,10 @@ Use the prefix argument to choose the behavior, as follows:
  With plain `C-u C-u':
   Same as `icicle-select-window' with a negative prefix arg: Select a
   window from any frame, including iconified and invisible frames.
-  
+
  With plain `C-u C-u C-u' (Emacs 24+):
   This is `icicle-choose-window-for-buffer-display', with windows from
-  all frames (i.e., iconified and invisible) frames as candidates. 
+  all frames (i.e., iconified and invisible) frames as candidates.
   (For Emacs prior to Emacs 24, this has the same effect as `C-u'.)
 
 If you use library `oneonone.el' with a standalone minibuffer frame,
@@ -10228,7 +10201,7 @@ command for more information."
     (visit-tags-table-buffer 'same)     ; To pick up `default-directory' of TAGS table.
     (funcall icicle-find-file-abs-action-fn fil)) ; FREE here: `icicle-find-file-abs-action-fn'.
   prompt icicle-abs-file-candidates nil ; `completing-read' args
-  (and (fboundp 'confirm-nonexistent-file-or-buffer)  (confirm-nonexistent-file-or-buffer)) ;Emacs 23. 
+  (and (fboundp 'confirm-nonexistent-file-or-buffer)  (confirm-nonexistent-file-or-buffer)) ;Emacs 23.
   nil 'file-name-history (if (eq major-mode 'dired-mode)
                              (condition-case nil ; E.g. error because not on file line (ignore)
                                  (abbreviate-file-name (dired-get-file-for-visit))
